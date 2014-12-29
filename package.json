@@ -1,0 +1,12 @@
+{
+  "name": "flask-start",
+  "version": "0.0.0",
+  "homepage": "https://github.com/yasyf/flask-start",
+  "authors": [
+    "Yasyf Mohamedali <yasyfm@gmail.com>"
+  ],
+  "dependencies": {
+    "coffee-script": "~1.7.1",
+    "less": "^1.7.3"
+  }
+}
