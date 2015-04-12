@@ -8,7 +8,7 @@ class CustomStreamListener(tweepy.StreamListener):
   def __init__(self, socketio, track):
     super(CustomStreamListener, self).__init__()
     self.socketio = socketio
-    self.room = track or '!sample!'
+    self.room = track
     self.session = FuturesSession()
 
   def on_status(self, status):
@@ -58,21 +58,28 @@ class CustomStreamListener(tweepy.StreamListener):
     return True
 
 def open_stream(socketio, track):
+  if track:
+    track = track.lower()
+  else:
+    track = 'everything'
+
   if track not in streams:
     listener = CustomStreamListener(socketio, track)
     auth = tweepy.OAuthHandler(os.getenv('TWITTER_API_KEY'), os.getenv('TWITTER_API_SECRET'))
     auth.set_access_token(os.getenv('TWITTER_ACCESS_TOKEN'), os.getenv('TWITTER_ACCESS_TOKEN_SECRET'))
     stream = tweepy.streaming.Stream(auth, listener)
-    if track:
-      stream.filter(track=[track], async=True)
-    else:
+    if track == "everything":
       stream.sample(async=True)
+    else:
+      stream.filter(track=[track], async=True)
+
     streams[track] = [stream, 0]
   streams[track][1] += 1
   return streams[track][0]
 
 def close_stream(track):
-  streams[track][1] -= 1
-  if streams[track][1] < 1:
-    stream = streams.pop(track)
-    stream[0].disconnect()
+  if track in streams:
+    streams[track][1] -= 1
+    if streams[track][1] < 1:
+      stream = streams.pop(track)
+      stream[0].disconnect()

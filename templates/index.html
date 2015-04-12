@@ -4,7 +4,14 @@
   {% raw %}
     <div ng-controller='IndexCtrl'>
       <div id="header">
-        <h1>How The World Feels About <i>X</i></h1>
+        <h1>
+          How The World Feels About
+          <i>
+            <span contenteditable="true" ng-model="track"
+                strip-br="true" no-line-breaks="true" select-non-editable="true">
+            </span>
+          </i>
+        </h1>
       </h1>
       <div id="map"></div>
       <div id="legend"></div>

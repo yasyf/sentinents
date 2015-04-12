@@ -1,6 +1,10 @@
 FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
 
-  $scope.track = null
+  $scope.track = "Everything"
+  lastUpdate = "Everything"
+
+  areas = Areas.areas()
+  socket = io.connect("http://#{document.domain }:#{location.port}")
 
   AmCharts.ready ->
 
@@ -8,7 +12,6 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
     green = '#7aff9b'
     yellow = '#FFFD7A'
 
-    areas = Areas.areas()
     areaindexes = _.object _.map areas, (area, i) ->
       [area.id, i]
 
@@ -23,7 +26,7 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
         map: 'worldLow'
         areas: areas
       areasSettings:
-        autoZoom: true
+        autoZoom: false
         rollOverColor: '#7a8eff'
       zoomControl:
         zoomControlEnabled: false
@@ -40,8 +43,19 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
           {title: "Positive Sentiment", color: green}
         ]
 
+    trackNewQuery = (track) ->
+      if track != lastUpdate
+        console.log "#{lastUpdate} -> #{track}"
+        socket.emit 'closeStream',
+          track: lastUpdate
+        lastUpdate = track
+        map.dataProvider.zoomLevel = 1
+        areas = Areas.areas()
+        map.dataProvider.areas = areas
+        map.validateData()
+        socket.emit 'openStream',
+          track: track
 
-    socket = io.connect("http://#{document.domain }:#{location.port}")
     socket.on 'status', (data) ->
       if areas[areaindexes[data.country]]
         value = areas[areaindexes[data.country]].value + if data.sentiment >= 0.5 then 1 else -1
@@ -50,7 +64,7 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
           when value < 0 then red
           when value == 0 then yellow
           when value > 0 then green
-        console.log data.country, areas[areaindexes[data.country]].color, value
+        console.log data.country, value
         map.dataProvider.zoomLevel = map.zoomLevel()
         map.validateData()
 
@@ -59,12 +73,7 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
       socket.emit 'openStream',
         track: $scope.track
 
-    $scope.$watch 'track', (track, oldTrack) ->
-      if track != oldTrack
-        socket.emit 'closeStream',
-          track: oldTrack
-        socket.emit 'openStream',
-          track: track
+    $scope.$watch 'track', _.debounce(trackNewQuery, 500)
 
     $(window).unload ->
       socket.emit 'closeStream',

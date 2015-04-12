@@ -17,12 +17,10 @@ def index_view():
 
 @socketio.on('openStream')
 def handle_open_stream(data):
-  room = data['track'] or '!sample!'
-  join_room(room)
+  join_room(data['track'])
   open_stream(socketio, data['track'])
 
 @socketio.on('closeStream')
 def handle_close_stream(data):
-  room = data['track'] or '!sample!'
-  leave_room(room)
+  leave_room(data['track'])
   close_stream(data['track'])
