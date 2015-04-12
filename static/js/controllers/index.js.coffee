@@ -62,10 +62,12 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
           track: track
 
     getColor = (value) ->
-      switch
+      color = switch
         when value < 50 then red
         when value == 50 then yellow
         when value > 50 then green
+      factor = Math.abs(value - 50) / 2
+      tinycolor(color).darken(factor).toString()
 
     socket.on 'status', (data) ->
       index = areaindexes[data.country]
