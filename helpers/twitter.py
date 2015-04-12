@@ -66,7 +66,7 @@ class CustomStreamListener(tweepy.StreamListener):
     return True
 
 def get_random_twitter_auth():
-  i = random.randint(0,2)
+  i = random.randint(0,4)
   auth = tweepy.OAuthHandler(os.getenv('TWITTER_API_KEYS').split(';')[i],
                               os.getenv('TWITTER_API_SECRETS').split(';')[i])
   auth.set_access_token(os.getenv('TWITTER_ACCESS_TOKENS').split(';')[i],
