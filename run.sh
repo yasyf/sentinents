@@ -4,5 +4,5 @@ if [ "$DEV" == "true" ]
 then
   python app.py
 else
-  gunicorn -b "0.0.0.0:$PORT" app:app
+  gunicorn --worker-class socketio.sgunicorn.GeventSocketIOWorker -b "0.0.0.0:$PORT" app:app
 fi

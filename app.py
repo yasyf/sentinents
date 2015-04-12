@@ -1,9 +1,12 @@
 from flask import Flask
+from flask.ext.socketio import SocketIO
 from werkzeug.contrib.fixers import ProxyFix
 from flask.ext import assets
+from helpers.twitter import get_stream_listener
 import os, glob
 
 app = Flask(__name__)
+socketio = SocketIO(app)
 app.secret_key = os.environ.get('SK')
 app.wsgi_app = ProxyFix(app.wsgi_app)
 dev = os.environ.get('DEV') == 'true'
@@ -41,4 +44,6 @@ env.register('css_all', assets.Bundle(*css, filters=css_filters, output='css/min
 from routes import *
 
 if __name__ == '__main__':
-  app.run(host='0.0.0.0', port=int(os.environ.get('PORT') or 5000), debug=dev)
+  stream, listener = get_stream_listener(socketio)
+  stream.sample(async=True)
+  socketio.run(app, host='0.0.0.0', port=int(os.environ.get('PORT') or 5000))
