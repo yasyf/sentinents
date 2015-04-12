@@ -64,10 +64,10 @@ class CustomStreamListener(tweepy.StreamListener):
 
 def get_random_twitter_auth():
   i = random.randint(0,2)
-  auth = tweepy.OAuthHandler(os.getenv('TWITTER_API_KEY').split(';')[i],
-                              os.getenv('TWITTER_API_SECRET').split(';')[i])
-  auth.set_access_token(os.getenv('TWITTER_ACCESS_TOKEN').split(';')[i],
-                        os.getenv('TWITTER_ACCESS_TOKEN_SECRET').split(';')[i])
+  auth = tweepy.OAuthHandler(os.getenv('TWITTER_API_KEYS').split(';')[i],
+                              os.getenv('TWITTER_API_SECRETS').split(';')[i])
+  auth.set_access_token(os.getenv('TWITTER_ACCESS_TOKENS').split(';')[i],
+                        os.getenv('TWITTER_ACCESS_TOKEN_SECRETS').split(';')[i])
   return auth
 
 def open_stream(socketio, track):

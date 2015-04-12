@@ -1,7 +1,7 @@
 FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
 
-  $scope.track = "Everything"
-  lastUpdate = "Everything"
+  $scope.track = "everything"
+  lastUpdate = "everything"
 
   areas = Areas.areas()
   socket = io.connect("http://#{document.domain }:#{location.port}")
