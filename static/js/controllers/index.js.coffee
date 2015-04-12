@@ -1,6 +1,6 @@
 FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
 
-  $scope.track = "python"
+  $scope.track = null
 
   AmCharts.ready ->
 
@@ -57,5 +57,16 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
     socket.on 'connect', ->
       socket.emit 'ping', 'pong'
       socket.emit 'openStream',
+        track: $scope.track
+
+    $scope.$watch 'track', (track, oldTrack) ->
+      if track != oldTrack
+        socket.emit 'closeStream',
+          track: oldTrack
+        socket.emit 'openStream',
+          track: track
+
+    $(window).unload ->
+      socket.emit 'closeStream',
         track: $scope.track
 ]

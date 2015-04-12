@@ -1,7 +1,7 @@
 import tweepy, os, random
 from requests_futures.sessions import FuturesSession
 
-TEST_MODE = True
+TEST_MODE = bool(os.getenv('TEST_MODE'))
 streams = {}
 
 class CustomStreamListener(tweepy.StreamListener):

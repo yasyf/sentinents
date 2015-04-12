@@ -20,3 +20,9 @@ def handle_open_stream(data):
   room = data['track'] or '!sample!'
   join_room(room)
   open_stream(socketio, data['track'])
+
+@socketio.on('closeStream')
+def handle_close_stream(data):
+  room = data['track'] or '!sample!'
+  leave_room(room)
+  close_stream(data['track'])
