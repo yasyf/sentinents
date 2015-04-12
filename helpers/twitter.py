@@ -62,6 +62,14 @@ class CustomStreamListener(tweepy.StreamListener):
     print 'Timeout...'
     return True
 
+def get_random_twitter_auth():
+  i = random.randint(0,2)
+  auth = tweepy.OAuthHandler(os.getenv('TWITTER_API_KEY').split(';')[i],
+                              os.getenv('TWITTER_API_SECRET').split(';')[i])
+  auth.set_access_token(os.getenv('TWITTER_ACCESS_TOKEN').split(';')[i],
+                        os.getenv('TWITTER_ACCESS_TOKEN_SECRET').split(';')[i])
+  return auth
+
 def open_stream(socketio, track):
   if track:
     track = track.lower()
@@ -70,8 +78,7 @@ def open_stream(socketio, track):
 
   if track not in streams:
     listener = CustomStreamListener(socketio, track)
-    auth = tweepy.OAuthHandler(os.getenv('TWITTER_API_KEY'), os.getenv('TWITTER_API_SECRET'))
-    auth.set_access_token(os.getenv('TWITTER_ACCESS_TOKEN'), os.getenv('TWITTER_ACCESS_TOKEN_SECRET'))
+    auth = get_random_twitter_auth()
     stream = tweepy.streaming.Stream(auth, listener)
     if track == "everything":
       stream.sample(async=True)
@@ -83,6 +90,10 @@ def open_stream(socketio, track):
   return streams[track][0]
 
 def close_stream(track):
+  if track:
+    track = track.lower()
+  else:
+    track = 'everything'
   if track in streams:
     streams[track][1] -= 1
     if streams[track][1] < 1:
