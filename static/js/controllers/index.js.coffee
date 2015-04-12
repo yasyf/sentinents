@@ -65,9 +65,9 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', '$timeout', ($scope, Area
 
     getColor = (value) ->
       color = switch
-        when value < 50 then red
-        when value == 50 then yellow
-        when value > 50 then green
+        when value < 45 then red
+        when 45 <= value <= 55 then yellow
+        when value > 55 then green
       factor = Math.abs(value - 50) / 2
       tinycolor(color).darken(factor).toString()
 
