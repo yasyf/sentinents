@@ -1,4 +1,4 @@
-from flask import session, request, render_template, jsonify, g, redirect
+from flask import render_template
 from helpers.twitter import open_stream, close_stream
 from flask.ext.socketio import join_room, leave_room
 from app import app, socketio

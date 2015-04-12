@@ -1,7 +1,7 @@
 import tweepy, os, random
 from requests_futures.sessions import FuturesSession
 
-TEST_MODE = bool(os.getenv('TEST_MODE'))
+TEST_MODE = os.getenv('TEST_MODE') == "true"
 streams = {}
 
 class CustomStreamListener(tweepy.StreamListener):
@@ -10,6 +10,9 @@ class CustomStreamListener(tweepy.StreamListener):
     self.socketio = socketio
     self.room = track
     self.session = FuturesSession()
+
+  def get_geonames_username(self):
+    return "yasyf{}".format(random.randint(1,5))
 
   def on_status(self, status):
     if status.coordinates or status.author.location:
@@ -41,11 +44,13 @@ class CustomStreamListener(tweepy.StreamListener):
 
       if status.coordinates:
         url = "http://ws.geonames.org/countryCode"
-        args = {'lat': status.coordinates['coordinates'][1], 'lng': status.coordinates['coordinates'][0], 'username': 'yasyf'}
+        args = {'lat': status.coordinates['coordinates'][1], 'lng': status.coordinates['coordinates'][0],
+               'username': self.get_geonames_username()}
         self.session.get(url, params=args, background_callback=add_country_code)
       else:
         url = "http://api.geonames.org/search"
-        args = {'q': status.author.location, 'username': 'yasyf', 'maxRows': 1, 'type': 'json'}
+        args = {'q': status.author.location, 'username': self.get_geonames_username(),
+                'maxRows': 1, 'type': 'json'}
         self.session.get(url, params=args, background_callback=add_country_code)
     return True
 
