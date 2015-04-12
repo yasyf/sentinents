@@ -12,6 +12,8 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
     map = new AmCharts.makeChart 'map',
       type: 'map'
       theme: 'black'
+      fontFamily: "Lato"
+      fontSize: 20
       pathToImages: "https://cdnjs.cloudflare.com/ajax/libs/ammaps/3.13.0/images/"
       dataProvider:
         map: 'worldLow'
@@ -23,6 +25,8 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
         panControlEnabled: false
       legend:
         divId: "legend"
+        align: "center"
+        color: "black"
         width: "100%"
         top: 450
         data: [
