@@ -58,6 +58,7 @@ class CustomStreamListener(tweepy.StreamListener):
 
   def on_error(self, status_code):
     print 'Encountered error with status code:', status_code
+    self.socketio.emit('error', {'status_code': status_code})
     return True
 
   def on_timeout(self):

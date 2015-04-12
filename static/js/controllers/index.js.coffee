@@ -1,4 +1,4 @@
-FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
+FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', '$timeout', ($scope, Areas, $timeout) ->
 
   $scope.track = "everything"
   lastUpdate = "everything"
@@ -106,6 +106,14 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
       socket.emit 'ping', 'pong'
       socket.emit 'openStream',
         track: $scope.track
+
+    socket.on 'error', (data) ->
+      statusCode = data.status_code
+      if statusCode == 420
+        $("#alert").show()
+        $timeout ->
+          $("#alert").fadeOut()
+        , 5*1000
 
     $scope.$watch 'track', _.debounce(trackNewQuery, 500)
 

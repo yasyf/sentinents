@@ -36,21 +36,11 @@
     </script>
   </head>
   <body>
+    <div id="alert" style='display: none;'>
+      <a class="alert" href="#alert">Twitter is currently rate limiting us!</a>
+    </div>
     <div class="container-fluid" id='container'>
       <div class="main">
-        <!-- Messages -->
-        <div id="messages">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-              {% if messages %}
-                {% for category, message in messages %}
-                 <div class="alert alert-{{ category }} alert-dismissable">
-                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                  {{ message|safe }}
-                </div>
-                {% endfor %}
-              {% endif %}
-            {% endwith %}
-        </div>
         <!-- Body -->
         <div id="body">
           {% block body %}{% endblock %}

@@ -1,0 +1,88 @@
+/* Alert */
+
+#alert {
+    position: relative;
+}
+
+#alert:target {
+    display: none;
+}
+
+.alert:hover {
+  text-decoration: none;
+  color: #f6f6f6;
+}
+
+.alert {
+    padding: 25px;
+    background-color: #c4453c;
+    background-image: -webkit-linear-gradient(135deg, transparent,
+                      transparent 25%, hsla(0,0%,0%,.05) 25%,
+                      hsla(0,0%,0%,.05) 50%, transparent 50%,
+                      transparent 75%, hsla(0,0%,0%,.05) 75%,
+                      hsla(0,0%,0%,.05));
+    background-image: -moz-linear-gradient(135deg, transparent,
+                      transparent 25%, hsla(0,0%,0%,.1) 25%,
+                      hsla(0,0%,0%,.1) 50%, transparent 50%,
+                      transparent 75%, hsla(0,0%,0%,.1) 75%,
+                      hsla(0,0%,0%,.1));
+    background-image: -ms-linear-gradient(135deg, transparent,
+                      transparent 25%, hsla(0,0%,0%,.1) 25%,
+                      hsla(0,0%,0%,.1) 50%, transparent 50%,
+                      transparent 75%, hsla(0,0%,0%,.1) 75%,
+                      hsla(0,0%,0%,.1));
+    background-image: -o-linear-gradient(135deg, transparent,
+                      transparent 25%, hsla(0,0%,0%,.1) 25%,
+                      hsla(0,0%,0%,.1) 50%, transparent 50%,
+                      transparent 75%, hsla(0,0%,0%,.1) 75%,
+                      hsla(0,0%,0%,.1));
+    background-image: linear-gradient(135deg, transparent,
+                      transparent 25%, hsla(0,0%,0%,.1) 25%,
+                      hsla(0,0%,0%,.1) 50%, transparent 50%,
+                      transparent 75%, hsla(0,0%,0%,.1) 75%,
+                      hsla(0,0%,0%,.1));
+    background-size: 20px 20px;
+    box-shadow: 0 5px 0 hsla(0,0%,0%,.1);
+    color: #f6f6f6;
+    display: block;
+    font-size: 40px;
+    height: 120px;
+    position: absolute;
+    text-align: center;
+    text-decoration: none;
+    top: -45px;
+    width: 100%;
+    -webkit-animation: alert 1s ease forwards;
+       -moz-animation: alert 1s ease forwards;
+        -ms-animation: alert 1s ease forwards;
+         -o-animation: alert 1s ease forwards;
+            animation: alert 1s ease forwards;
+}
+
+/* Animation */
+
+@-webkit-keyframes alert {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { top: 0; }
+}
+@-moz-keyframes alert {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { top: 0; }
+}
+@-ms-keyframes alert {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { top: 0; }
+}
+@-o-keyframes alert {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { top: 0; }
+}
+@keyframes alert {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { top: 0; }
+}
