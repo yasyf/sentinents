@@ -28,6 +28,7 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
       areasSettings:
         autoZoom: false
         rollOverColor: '#7a8eff'
+        balloonText: "<b>[[title]]</b>: [[value]]%"
       zoomControl:
         zoomControlEnabled: false
         panControlEnabled: false
@@ -58,13 +59,17 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
 
     socket.on 'status', (data) ->
       if areas[areaindexes[data.country]]
-        value = areas[areaindexes[data.country]].value + if data.sentiment >= 0.5 then 1 else -1
-        areas[areaindexes[data.country]].value = value
+        n = areas[areaindexes[data.country]].customData + 1
+        areas[areaindexes[data.country]].customData = n
+        value = areas[areaindexes[data.country]].value
+        newValue = (value * ((n - 1) / n)) + (data.sentiment * 100) * (1 / n)
+        newValue = newValue.toFixed(2)
+        areas[areaindexes[data.country]].value = newValue
         areas[areaindexes[data.country]].color = switch
-          when value < 0 then red
-          when value == 0 then yellow
-          when value > 0 then green
-        console.log data.country, value
+          when newValue < 50 then red
+          when newValue == 50 then yellow
+          when newValue > 50 then green
+        console.log data.country, newValue
         map.dataProvider.zoomLevel = map.zoomLevel()
         map.validateData()
 
