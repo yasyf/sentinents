@@ -12,6 +12,7 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
     red = '#ff7a7a'
     green = '#7aff9b'
     yellow = '#FFFD7A'
+    grey = '#c4c4c4'
 
     areaindexes = _.object _.map areas, (area, i) ->
       [area.id, i]
@@ -41,9 +42,10 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
         width: "100%"
         top: 450
         data: [
-          {title: "Negative Sentiment", color: red},
-          {title: "Neutral Sentiment", color: yellow},
-          {title: "Positive Sentiment", color: green}
+          {title: "Unknown", color: grey},
+          {title: "Negative", color: red},
+          {title: "Neutral", color: yellow},
+          {title: "Positive", color: green}
         ]
 
     trackNewQuery = (track) ->
