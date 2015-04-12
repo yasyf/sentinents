@@ -28,7 +28,9 @@ class CustomStreamListener(tweepy.StreamListener):
         try:
           json = response.json()
           if json['totalResultsCount'] > 0:
-            data['country'] = json['geonames'][0]['countryCode']
+            result = json['geonames'][0]
+            data['country'] = result['countryCode']
+            data['coordinates'] = {'coordinates': [float(result['lng']), float(result['lat'])]}
           else:
             return
         except:

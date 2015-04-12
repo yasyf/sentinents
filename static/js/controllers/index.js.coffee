@@ -4,6 +4,7 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
   lastUpdate = "everything"
 
   areas = Areas.areas()
+  images = []
   socket = io.connect("http://#{document.domain }:#{location.port}")
 
   AmCharts.ready ->
@@ -25,6 +26,7 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
       dataProvider:
         map: 'worldLow'
         areas: areas
+        images: images
       areasSettings:
         autoZoom: false
         rollOverColor: '#7a8eff'
@@ -52,26 +54,47 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
         lastUpdate = track
         map.dataProvider.zoomLevel = 1
         areas = Areas.areas()
+        images = []
         map.dataProvider.areas = areas
         map.validateData()
         socket.emit 'openStream',
           track: track
 
+    getColor = (value) ->
+      switch
+        when value < 50 then red
+        when value == 50 then yellow
+        when value > 50 then green
+
     socket.on 'status', (data) ->
-      if areas[areaindexes[data.country]]
-        n = areas[areaindexes[data.country]].customData + 1
-        areas[areaindexes[data.country]].customData = n
-        value = areas[areaindexes[data.country]].value
-        newValue = (value * ((n - 1) / n)) + (data.sentiment * 100) * (1 / n)
+      index = areaindexes[data.country]
+      if areas[index]
+        n = areas[index].customData + 1
+        areas[index].customData = n
+        value = areas[index].value
+        sentiment = data.sentiment * 100
+        newValue = (value * ((n - 1) / n)) + sentiment * (1 / n)
         newValue = newValue.toFixed(2)
-        areas[areaindexes[data.country]].value = newValue
-        areas[areaindexes[data.country]].color = switch
-          when newValue < 50 then red
-          when newValue == 50 then yellow
-          when newValue > 50 then green
-        console.log data.country, newValue
+        areas[index].value = newValue
+        areas[index].color = getColor(newValue)
+
+        if images.length > 50
+          images = []
+
+        images.push
+          type: "circle"
+          width: 6
+          height: 6
+          color: getColor(sentiment)
+          longitude: data.coordinates.coordinates[0]
+          latitude: data.coordinates.coordinates[1]
+          name: data.text
+          value: sentiment
+
         map.dataProvider.zoomLevel = map.zoomLevel()
         map.validateData()
+
+        console.log data.country, newValue
 
     socket.on 'connect', ->
       socket.emit 'ping', 'pong'
