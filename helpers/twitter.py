@@ -7,7 +7,10 @@ class CustomStreamListener(tweepy.StreamListener):
     self.socketio = socketio
 
   def on_status(self, status):
-    self.socketio.emit('status', {'text': status.text.encode('utf-8')})
+    data = {'text': status.text.encode('utf-8')}
+    data.update({k:getattr(status.author, k) for k in ['time_zone', 'location']})
+    data.update({k:getattr(status, k) for k in ['lang', 'coordinates']})
+    self.socketio.emit('status', data)
     return True
 
   def on_error(self, status_code):
