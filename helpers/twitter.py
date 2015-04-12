@@ -8,7 +8,7 @@ class CustomStreamListener(tweepy.StreamListener):
   def __init__(self, socketio, track):
     super(CustomStreamListener, self).__init__()
     self.socketio = socketio
-    self.track = track or '!sample!'
+    self.room = track or '!sample!'
     self.session = FuturesSession()
 
   def on_status(self, status):
@@ -19,7 +19,7 @@ class CustomStreamListener(tweepy.StreamListener):
 
       def add_sentiment(session, response):
         data['sentiment'] = response.json()['results']
-        self.socketio.emit('status', data)
+        self.socketio.emit('status', data, self.room)
 
       def add_country_code(session, response):
         try:
@@ -33,7 +33,7 @@ class CustomStreamListener(tweepy.StreamListener):
 
         if TEST_MODE:
           data['sentiment'] = random.random()
-          self.socketio.emit('status', data)
+          self.socketio.emit('status', data, self.room)
         else:
           url = "http://apiv2.indico.io/sentiment"
           args = {'key': os.getenv('INDICOIO_API_KEY')}
@@ -64,10 +64,8 @@ def open_stream(socketio, track):
     auth.set_access_token(os.getenv('TWITTER_ACCESS_TOKEN'), os.getenv('TWITTER_ACCESS_TOKEN_SECRET'))
     stream = tweepy.streaming.Stream(auth, listener)
     if track:
-      print track
       stream.filter(track=[track], async=True)
     else:
-      print 'sampling'
       stream.sample(async=True)
     streams[track] = [stream, 0]
   streams[track][1] += 1

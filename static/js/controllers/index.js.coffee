@@ -1,6 +1,6 @@
 FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
 
-  $scope.track = null
+  $scope.track = "python"
 
   AmCharts.ready ->
 
