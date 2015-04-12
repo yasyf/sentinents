@@ -56,6 +56,7 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
         areas = Areas.areas()
         images = []
         map.dataProvider.areas = areas
+        map.dataProvider.images = images
         map.validateData()
         socket.emit 'openStream',
           track: track
@@ -79,7 +80,8 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
         areas[index].color = getColor(newValue)
 
         if images.length > 50
-          images = []
+          images = _.takeRight(images, 10)
+          map.dataProvider.images = images
 
         images.push
           type: "circle"
