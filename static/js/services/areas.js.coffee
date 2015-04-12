@@ -5,6 +5,6 @@ FlaskStart.service 'Areas', [ ->
       _.map areas, (area) ->
         id: area.id
         value: 0
-        color: 'black'
+        color: '#c4c4c4'
 
 ]

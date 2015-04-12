@@ -12,6 +12,7 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
     map = new AmCharts.makeChart 'map',
       type: 'map'
       theme: 'black'
+      color: 'white'
       fontFamily: "Lato"
       fontSize: 20
       pathToImages: "https://cdnjs.cloudflare.com/ajax/libs/ammaps/3.13.0/images/"
@@ -20,13 +21,14 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
         areas: areas
       areasSettings:
         autoZoom: true
+        rollOverColor: '#7a8eff'
       zoomControl:
         zoomControlEnabled: false
         panControlEnabled: false
       legend:
         divId: "legend"
         align: "center"
-        color: "black"
+        color: "white"
         width: "100%"
         top: 450
         data: [
