@@ -20,14 +20,15 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
 
     socket = io.connect("http://#{document.domain }:#{location.port}")
     socket.on 'status', (data) ->
-      value = areas[areaindexes[data.country]].value + if data.sentiment >= 0.5 then 1 else -1
-      areas[areaindexes[data.country]].value = value
-      areas[areaindexes[data.country]].color = switch
-        when value < 0 then "red"
-        when value == 0 then "yellow"
-        when value > 0 then "green"
-      console.log data.country, areas[areaindexes[data.country]].color, value
-      map.validateData()
+      if areas[areaindexes[data.country]]
+        value = areas[areaindexes[data.country]].value + if data.sentiment >= 0.5 then 1 else -1
+        areas[areaindexes[data.country]].value = value
+        areas[areaindexes[data.country]].color = switch
+          when value < 0 then "red"
+          when value == 0 then "yellow"
+          when value > 0 then "green"
+        console.log data.country, areas[areaindexes[data.country]].color, value
+        map.validateData()
 
     socket.on 'connect', ->
       socket.emit 'ping', 'pong'
