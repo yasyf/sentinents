@@ -2,11 +2,13 @@ import tweepy, os, random
 from requests_futures.sessions import FuturesSession
 
 TEST_MODE = True
+streams = {}
 
 class CustomStreamListener(tweepy.StreamListener):
-  def __init__(self, socketio):
+  def __init__(self, socketio, track):
     super(CustomStreamListener, self).__init__()
     self.socketio = socketio
+    self.track = track or '!sample!'
     self.session = FuturesSession()
 
   def on_status(self, status):
@@ -55,9 +57,24 @@ class CustomStreamListener(tweepy.StreamListener):
     print 'Timeout...'
     return True
 
-def get_stream_listener(socketio):
-  listener = CustomStreamListener(socketio)
-  auth = tweepy.OAuthHandler(os.getenv('TWITTER_API_KEY'), os.getenv('TWITTER_API_SECRET'))
-  auth.set_access_token(os.getenv('TWITTER_ACCESS_TOKEN'), os.getenv('TWITTER_ACCESS_TOKEN_SECRET'))
-  stream = tweepy.streaming.Stream(auth, listener)
-  return stream, listener
+def open_stream(socketio, track):
+  if track not in streams:
+    listener = CustomStreamListener(socketio, track)
+    auth = tweepy.OAuthHandler(os.getenv('TWITTER_API_KEY'), os.getenv('TWITTER_API_SECRET'))
+    auth.set_access_token(os.getenv('TWITTER_ACCESS_TOKEN'), os.getenv('TWITTER_ACCESS_TOKEN_SECRET'))
+    stream = tweepy.streaming.Stream(auth, listener)
+    if track:
+      print track
+      stream.filter(track=[track], async=True)
+    else:
+      print 'sampling'
+      stream.sample(async=True)
+    streams[track] = [stream, 0]
+  streams[track][1] += 1
+  return streams[track][0]
+
+def close_stream(track):
+  streams[track][1] -= 1
+  if streams[track][1] < 1:
+    stream = streams.pop(track)
+    stream[0].disconnect()

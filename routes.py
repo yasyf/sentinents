@@ -1,4 +1,5 @@
 from flask import session, request, render_template, jsonify, g, redirect
+from helpers.twitter import open_stream, close_stream
 from app import app, socketio
 
 @app.before_request
@@ -13,6 +14,7 @@ def postprocess_request(response):
 def index_view():
   return render_template('index.html')
 
-@socketio.on('request')
-def handle_request(json):
-  print json
+@socketio.on('openStream')
+def handle_open_stream(data):
+  room = data['track'] or '!sample!'
+  open_stream(socketio, data['track'])

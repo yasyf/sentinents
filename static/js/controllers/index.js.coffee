@@ -1,4 +1,7 @@
 FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
+
+  $scope.track = null
+
   AmCharts.ready ->
 
     red = '#ff7a7a'
@@ -53,4 +56,6 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', ($scope, Areas) ->
 
     socket.on 'connect', ->
       socket.emit 'ping', 'pong'
+      socket.emit 'openStream',
+        track: $scope.track
 ]

@@ -2,7 +2,6 @@ from flask import Flask
 from flask.ext.socketio import SocketIO
 from werkzeug.contrib.fixers import ProxyFix
 from flask.ext import assets
-from helpers.twitter import get_stream_listener
 import os, glob
 
 app = Flask(__name__)
@@ -42,9 +41,6 @@ env.register('js_all', assets.Bundle(*js, filters=js_filters, output='js/min/scr
 env.register('css_all', assets.Bundle(*css, filters=css_filters, output='css/min/styles.min.css'))
 
 from routes import *
-
-stream, listener = get_stream_listener(socketio)
-stream.sample(async=True)
 
 if __name__ == '__main__':
   socketio.run(app, host='0.0.0.0', port=int(os.environ.get('PORT') or 5000))
