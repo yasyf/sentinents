@@ -15,12 +15,21 @@ def postprocess_request(response):
 def index_view():
   return render_template('index.html')
 
+
+def translate_track(track):
+  if track:
+    return track.lower().replace('#', '')
+  else:
+    return 'everything'
+
 @socketio.on('openStream')
 def handle_open_stream(data):
-  join_room(data['track'])
-  open_stream(socketio, data['track'])
+  track = translate_track(data['track'])
+  join_room(track)
+  open_stream(socketio, track)
 
 @socketio.on('closeStream')
 def handle_close_stream(data):
-  leave_room(data['track'])
-  close_stream(data['track'])
+  track = translate_track(data['track'])
+  leave_room(track)
+  close_stream(track)

@@ -22,7 +22,7 @@ class CustomStreamListener(tweepy.StreamListener):
 
       def add_sentiment(session, response):
         data['sentiment'] = response.json()['results']
-        self.socketio.emit('status', data, self.room)
+        self.socketio.emit('status', data, room=self.room)
 
       def add_country_code(session, response):
         try:
@@ -38,7 +38,7 @@ class CustomStreamListener(tweepy.StreamListener):
 
         if TEST_MODE:
           data['sentiment'] = random.random()
-          self.socketio.emit('status', data, self.room)
+          self.socketio.emit('status', data, room=self.room)
         else:
           url = "http://apiv2.indico.io/sentiment"
           args = {'key': os.getenv('INDICOIO_API_KEY')}
@@ -58,7 +58,7 @@ class CustomStreamListener(tweepy.StreamListener):
 
   def on_error(self, status_code):
     print 'Encountered error with status code:', status_code
-    self.socketio.emit('error', {'status_code': status_code})
+    self.socketio.emit('error', {'status_code': status_code}, room=self.room)
     return True
 
   def on_timeout(self):
@@ -74,17 +74,16 @@ def get_random_twitter_auth():
   return auth
 
 def open_stream(socketio, track):
-  if track:
-    track = track.lower()
-  else:
-    track = 'everything'
-
   if track not in streams:
     listener = CustomStreamListener(socketio, track)
     auth = get_random_twitter_auth()
     stream = tweepy.streaming.Stream(auth, listener)
     if track == "everything":
       stream.sample(async=True)
+    elif track.startswith('@'):
+      track = track[1:]
+      user_id = tweepy.API(auth).get_user(screen_name=track).id_str
+      stream.filter(track=[track], follow=[user_id], async=True)
     else:
       stream.filter(track=[track], async=True)
 
@@ -93,10 +92,6 @@ def open_stream(socketio, track):
   return streams[track][0]
 
 def close_stream(track):
-  if track:
-    track = track.lower()
-  else:
-    track = 'everything'
   if track in streams:
     streams[track][1] -= 1
     if streams[track][1] < 1:
