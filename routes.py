@@ -31,7 +31,10 @@ def handle_disconnect():
 @socketio.on('openStream')
 def handle_open_stream(data):
   track = translate_track(data['track'])
-  session['rooms'][track] = True
+  if 'rooms' in session:
+    session['rooms'][track] = True
+  else:
+    session['rooms'] = {track: True}
   join_room(track)
   open_stream(socketio, track)
 
