@@ -1,5 +1,5 @@
 from flask import render_template
-from helpers.twitter import open_stream, close_stream
+from helpers.twitter import open_stream, close_stream, get_random_trending
 from flask.ext.socketio import join_room, leave_room
 from app import app, socketio
 
@@ -13,8 +13,7 @@ def postprocess_request(response):
 
 @app.route('/')
 def index_view():
-  return render_template('index.html')
-
+  return render_template('index.html', random_trending=get_random_trending())
 
 def translate_track(track):
   if track:

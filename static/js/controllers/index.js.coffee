@@ -1,7 +1,9 @@
-FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', '$timeout', ($scope, Areas, $timeout) ->
+FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', '$timeout', '$window', '$location',
+ ($scope, Areas, $timeout, $window, $location) ->
 
-  $scope.track = "everything"
-  lastUpdate = "everything"
+  lastUpdate = $location.search()['q'] or $window.q
+  $scope.track = lastUpdate
+  $location.search('q', lastUpdate)
 
   areas = Areas.areas()
   images = []
@@ -50,6 +52,7 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', '$timeout', ($scope, Area
 
     trackNewQuery = (track) ->
       if track != lastUpdate
+        $timeout -> $location.search('q', track)
         socket.emit 'closeStream',
           track: lastUpdate
         , ->

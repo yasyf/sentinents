@@ -73,6 +73,11 @@ def get_random_twitter_auth():
                         os.getenv('TWITTER_ACCESS_TOKEN_SECRETS').split(';')[i])
   return auth
 
+def get_random_trending():
+  auth = get_random_twitter_auth()
+  trends = tweepy.API(auth).trends_place(1)[0]
+  return random.choice(trends['trends'])['name']
+
 def open_stream(socketio, track):
   if track not in streams:
     listener = CustomStreamListener(socketio, track)

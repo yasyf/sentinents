@@ -1,6 +1,9 @@
 {% extends "_base.html" %}
 {% block title %}Sentinents - How does the world feel about X?{% endblock %}
 {% block body %}
+  <script type="text/javascript">
+    window.q = {{random_trending|tojson}};
+  </script>
   {% raw %}
     <div ng-controller='IndexCtrl'>
       <div id="header">
