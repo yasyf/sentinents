@@ -50,18 +50,19 @@ FlaskStart.controller 'IndexCtrl', ['$scope', 'Areas', '$timeout', ($scope, Area
 
     trackNewQuery = (track) ->
       if track != lastUpdate
-        console.log "#{lastUpdate} -> #{track}"
         socket.emit 'closeStream',
           track: lastUpdate
-        lastUpdate = track
-        map.dataProvider.zoomLevel = 1
-        areas = Areas.areas()
-        images = []
-        map.dataProvider.areas = areas
-        map.dataProvider.images = images
-        map.validateData()
-        socket.emit 'openStream',
-          track: track
+        , ->
+          lastUpdate = track
+          map.dataProvider.zoomLevel = 1
+          areas = Areas.areas()
+          images = []
+          map.dataProvider.areas = areas
+          map.dataProvider.images = images
+          map.validateData()
+          console.log "#{lastUpdate} -> #{track}"
+          socket.emit 'openStream',
+            track: track
 
     getColor = (value) ->
       color = switch
