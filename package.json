@@ -6,7 +6,7 @@
     "Yasyf Mohamedali <yasyfm@gmail.com>"
   ],
   "dependencies": {
-    "coffee-script": "~1.7.1",
-    "less": "^1.7.3"
+    "coffee-script": "^1.10.0",
+    "less": "^1.7.5"
   }
 }
