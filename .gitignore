@@ -45,6 +45,22 @@ nosetests.xml
 # Translations
 *.mo
 
+# Log files and pidfiles
+*.log
+*.pid
+
+# Temporary files from many editors
+*~
+
+# temporary files which can be created if a process still has a handle open of a deleted file
+.fuse_hidden*
+
+# KDE directory preferences
+.directory
+
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
+
 # Mr Developer
 .mr.developer.cfg
 .project
